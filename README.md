@@ -37,7 +37,7 @@ Swerve drive implementation that can be used as a starting point for programming
 9. Make sure each encoder and motor are inverted if needed
 10. Each swerve module orientation is forward positive and counter-clockwise positive
 
-##### Glossary:
+Glossary:
     - Slew rate limiter -- softens the behavior of control inputs by capping the maximum rate of change
     - Kp Tuning constant -- the most important part of the PID loop/controller
     
