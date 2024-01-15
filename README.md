@@ -19,11 +19,11 @@ Swerve drive implementation that can be used as a starting point for programming
 3. CANcoder
 4. Double Neo
 5. SDS Mk4i L2 Swerve Module
-6. 26x26 base - 20.75 inches for both track width and wheel base
+6. 26x26 base — 20.75 inches for both track width and wheel base
 7. 4 in diameter wheels
 
  Software specifications:
-    - SwerveKinematics order: LeftFront, RightFront, LeftBack, RightBack
+- SwerveKinematics order: leftFront, rightFront, leftBack, rightBack
 
 Offsets for swerve angles:
 1. Download Phoenix Tuner X
@@ -38,7 +38,7 @@ Offsets for swerve angles:
 10. Each swerve module orientation is forward positive and counter-clockwise positive
 
 Glossary:
-    - Slew rate limiter -- softens the behavior of control inputs by capping the maximum rate of change
-    - Kp Tuning constant -- the most important part of the PID loop/controller
+- Slew rate limiter — softens the behavior of control inputs by capping the maximum rate of change
+- Kp Tuning constant — the most important part of the PID loop/controller
     
 [FRC 0 to Autonomous](https://youtu.be/0Xi9yb1IMyA) tutorial on how to program swerve
