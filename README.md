@@ -4,7 +4,6 @@
 Swerve drive implementation that can be used as a starting point for programming a swerve drive robot.
 
 Action Items:
-1) Document the exact dimensions and hardware installed on our base robot (26x26, sparkmax, pigeon, etc.)
 2) Document all the key elements of configuring the swerve drive.
 3) Document all the key elements of troubleshooting the swerve drive.
 4) Update the code to have all the key elements output to the Smart Dashboard in a usable fashion.
@@ -20,8 +19,23 @@ Hardware and dimensions:
 3. CANcoder
 4. Double Neo
 5. SDS Mk4i L2 Swerve Module
-6. 26x26 base
+6. 26x26 base - 20.75 inches for both track width and wheel base
+7. 4 in diameter wheels
 
 Software specifications:
 1. SwerveKinematics order: LeftFront, RightFront, LeftBack, RightBack
 
+<<<<<<< HEAD
+Offsets for swerve angles:
+1. Download Phoenix Tuner X
+2. Plug into RoboRio with USB A to B
+3. Click on each CANcoder
+4. Turn all the wheel to the forward position
+5. Hit refresh, and record the absolute positions as Constants
+6. Name each swerve offset in the format of: LEFT_FRONT_OFFSET
+7. Make sure the wheels are oriented in the correct direction 
+8. Turn 180 degrees if not (turn on its side to test); you'll know if its in the correct direction by driving
+9. Make sure each encoder and motor are inverted if needed
+10. Each swerve module orientation is forward positive and counter-clockwise positive
+=======
+>>>>>>> 8e92a66ef053add5a69ef7e7368dd0e82d3e7a77
