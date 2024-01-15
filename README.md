@@ -1,19 +1,19 @@
 # BaseSwerve
-[![CI](https://github.com/Pearadox/BaseSwerve/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Pearadox/2024AlphaBot/actions/workflows/main.yml)
+[![CI](https://github.com/Pearadox/BaseSwerve/actions/workflows/blank.yml/badge.svg)](https://github.com/Pearadox/BaseSwerve/actions/workflows/blank.yml)
 
-Swerve drive implementation that can be used as a starting point for programming a swerve drive robot.
+## Swerve drive implementation that can be used as a starting point for programming a swerve drive robot.
 
- Action Items:
+ ### Action Items:
 2) Document all the key elements of configuring the swerve drive.
 3) Document all the key elements of troubleshooting the swerve drive.
 4) Update the code to have all the key elements output to the Smart Dashboard in a usable fashion.
 
- Vendor Dependencies:
+ ### Vendor Dependencies:
 1) https://software-metadata.revrobotics.com/REVLib-2024.json
 2) https://maven.ctr-electronics.com/release/com/ctre/phoenix6/latest/Phoenix6-frc2024-latest.json
 3) https://3015rangerrobotics.github.io/pathplannerlib/PathplannerLib.json
 
- Hardware and dimensions:
+ ### Hardware and dimensions:
 1. CANSparkMax for drivetrain
 2. CTRE Pigeon 2.0 gyro
 3. CANcoder
@@ -22,10 +22,14 @@ Swerve drive implementation that can be used as a starting point for programming
 6. 26x26 base - 20.75 inches for both track width and wheel base
 7. 4 in diameter wheels
 
- Software specifications:
-    - SwerveKinematics order: LeftFront, RightFront, LeftBack, RightBack
+ ### Software specifications:
+   - SwerveKinematics order: 
+     - LeftFront 
+     - RightFront 
+     - LeftBack
+     - RightBack
 
-Offsets for swerve angles:
+### Offsets for swerve angles:
 1. Download Phoenix Tuner X
 2. Plug into RoboRio with USB A to B
 3. Click on each CANcoder
@@ -37,8 +41,8 @@ Offsets for swerve angles:
 9. Make sure each encoder and motor are inverted if needed
 10. Each swerve module orientation is forward positive and counter-clockwise positive
 
-Glossary:
-    - Slew rate limiter -- softens the behavior of control inputs by capping the maximum rate of change
-    - Kp Tuning constant -- the most important part of the PID loop/controller
-    
-[FRC 0 to Autonomous](https://youtu.be/0Xi9yb1IMyA) tutorial on how to program swerve
+### Tutorial on how to program swerve:
+   - [FRC 0 to Autonomous](https://youtu.be/0Xi9yb1IMyA) 
+    - Glossary:
+       - Slew rate limiter: softens the behavior of control inputs by capping the maximum rate of change
+       - Kp Tuning constant: the most important part of the PID loop/controller
