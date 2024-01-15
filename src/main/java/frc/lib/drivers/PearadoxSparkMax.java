@@ -32,9 +32,7 @@ public class PearadoxSparkMax extends CANSparkMax {
     /**
      * Creates a new CANSparkMax with the necessary motor and PID configurations.
      * @param deviceId The device ID.
-     * @param m The mo
-     * 
-     * or type (Brushed/Brushless).
+     * @param m The motor type (Brushed/Brushless).
      * @param mode The idle mode (kBrake/kCoast).
      * @param limit The current limit.
      * @param isInverted The invert type of the motor.
