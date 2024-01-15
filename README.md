@@ -25,7 +25,7 @@ Swerve drive implementation that can be used as a starting point for programming
  Software specifications:
     - SwerveKinematics order: LeftFront, RightFront, LeftBack, RightBack
 
- Offsets for swerve angles:
+Offsets for swerve angles:
 1. Download Phoenix Tuner X
 2. Plug into RoboRio with USB A to B
 3. Click on each CANcoder
