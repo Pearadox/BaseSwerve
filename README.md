@@ -24,10 +24,10 @@
 
  ### Software specifications:
    - SwerveKinematics order: 
-     - LeftFront 
-     - RightFront 
-     - LeftBack
-     - RightBack
+     1. leftFront 
+     2. rightFront 
+     3. leftBack
+     4. rightBack
 
 ### Offsets for swerve angles:
 1. Download Phoenix Tuner X
@@ -35,14 +35,15 @@
 3. Click on each CANcoder
 4. Turn all the wheel to the forward position
 5. Hit refresh, and record the absolute positions as Constants
-6. Name each swerve offset in the format of: LEFT_FRONT_OFFSET
+6. Name each swerve offset in the format of `LEFT_FRONT_OFFSET`
 7. Make sure the wheels are oriented in the correct direction 
-8. Turn 180 degrees if not (turn on its side to test); you'll know if its in the correct direction by driving
+8. Turn 180 degrees if not (turn on its side to test); you'll know if it's in the correct direction by driving
 9. Make sure each encoder and motor are inverted if needed
 10. Each swerve module orientation is forward positive and counter-clockwise positive
 
 ### Tutorial on how to program swerve:
-   - [FRC 0 to Autonomous](https://youtu.be/0Xi9yb1IMyA) 
-    - Glossary:
-       - Slew rate limiter: softens the behavior of control inputs by capping the maximum rate of change
-       - Kp Tuning constant: the most important part of the PID loop/controller
+   - [FRC 0 to Autonomous](https://youtu.be/0Xi9yb1IMyA)
+
+### Glossary:
+- Slew rate limiter — softens the behavior of control inputs by capping the maximum rate of change
+- Kp Tuning constant — the most important part of the PID loop/controller
