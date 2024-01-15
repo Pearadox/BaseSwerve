@@ -1,4 +1,5 @@
 # BaseSwerve
+[![CI](https://github.com/Pearadox/2024AlphaBot/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Pearadox/2024AlphaBot/actions/workflows/main.yml)
 Swerve drive implementation that can be used as a starting point for programming a swerve drive robot.
 
 Action Items:
