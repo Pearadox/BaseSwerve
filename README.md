@@ -25,7 +25,6 @@ Hardware and dimensions:
 Software specifications:
 1. SwerveKinematics order: LeftFront, RightFront, LeftBack, RightBack
 
-<<<<<<< HEAD
 Offsets for swerve angles:
 1. Download Phoenix Tuner X
 2. Plug into RoboRio with USB A to B
@@ -37,5 +36,3 @@ Offsets for swerve angles:
 8. Turn 180 degrees if not (turn on its side to test); you'll know if its in the correct direction by driving
 9. Make sure each encoder and motor are inverted if needed
 10. Each swerve module orientation is forward positive and counter-clockwise positive
-=======
->>>>>>> 8e92a66ef053add5a69ef7e7368dd0e82d3e7a77
