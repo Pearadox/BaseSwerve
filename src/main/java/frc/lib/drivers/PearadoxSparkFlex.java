@@ -4,16 +4,14 @@
 
 package frc.lib.drivers;
 
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
 import edu.wpi.first.wpilibj.Preferences;
 
 /** Add your docs here. */
-public class PearadoxSparkMax extends SparkMax {
-    private SparkMaxConfig config;
+public class PearadoxSparkFlex extends com.revrobotics.spark.SparkFlex {
+    private SparkFlexConfig config;
 
     /**
      * Creates a new CANSparkMax with the necessary configurations.
@@ -23,17 +21,14 @@ public class PearadoxSparkMax extends SparkMax {
      * @param limit The current limit.
      * @param isInverted The invert type of the motor.
      */
-    public PearadoxSparkMax(int deviceId, MotorType m, IdleMode mode, int limit, boolean isInverted){
+    public PearadoxSparkFlex(int deviceId, MotorType m, IdleMode mode, int limit, boolean isInverted){
         super(deviceId, m);
-        config = new SparkMaxConfig();
-
+        config = new SparkFlexConfig();
+        
         config
             .idleMode(mode)
             .smartCurrentLimit(limit)
             .inverted(isInverted);
-        // config.encoder
-        //     .positionConversionFactor(1000)
-        //     .velocityConversionFactor(1000);
 
         super.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -54,25 +49,22 @@ public class PearadoxSparkMax extends SparkMax {
      * @param minOutput Reverse power minimum to allow the controller to output
      * @param maxOutput Reverse power maximum to allow the controller to output
      */
-    public PearadoxSparkMax(int deviceId, MotorType m, IdleMode mode, int limit, boolean isInverted, 
+    public PearadoxSparkFlex(int deviceId, MotorType m, IdleMode mode, int limit, boolean isInverted, 
         double kP, double kI, double kD, double minOutput, double maxOutput){
         super(deviceId, m);
-        config = new SparkMaxConfig();
+        config = new SparkFlexConfig();
 
         config
             .idleMode(mode)
             .smartCurrentLimit(limit)
             .inverted(isInverted);
         config.closedLoop
-            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .pid(kP, kI, kD)
-            .outputRange(minOutput, maxOutput);
-        // config.encoder
-        //     .positionConversionFactor(1000)
-        //     .velocityConversionFactor(1000);
+            .outputRange(minOutput, maxOutput)
+            .iZone(2); // default from 2024 pearadox lib
 
         super.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
+        
         String key = "Spark " + this.getDeviceId() + " Flashes";
         Preferences.setDouble(key, Preferences.getDouble(key, 0) + 1);
     }

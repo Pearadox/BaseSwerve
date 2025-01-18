@@ -4,12 +4,12 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -68,12 +68,14 @@ public final class Constants {
     public static final double WHEEL_BASE = Units.inchesToMeters(20.75);
     public static final double DRIVE_BASE_RADIUS = Math.sqrt(Math.pow(TRACK_WIDTH, 2) + Math.pow(WHEEL_BASE, 2)) / 2.0;
 
-    public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
-        new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
-        new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),
-        new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2),
-        new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2)
-    );
+    public static final Translation2d[] MODULE_TRANSLATIONS = { 
+      new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
+      new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),
+      new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2),
+      new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2)
+    };
+
+    public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(MODULE_TRANSLATIONS);
 
     //Teleop constraints
     public static final double TELE_DRIVE_MAX_SPEED = DRIVETRAIN_MAX_SPEED / 1;
@@ -85,12 +87,29 @@ public final class Constants {
     public static final double AUTO_kP_TRANSLATION = 0.4;
     public static final double AUTO_kP_ROTATION = 2.4;
 
-    public static final HolonomicPathFollowerConfig AUTO_CONFIG = new HolonomicPathFollowerConfig(
-      new PIDConstants(AUTO_kP_TRANSLATION, 0.0, 0.0),
-      new PIDConstants(AUTO_kP_ROTATION, 0.0, 0.0),
-      DRIVETRAIN_MAX_SPEED, // Max module speed, in m/s
-      DRIVE_BASE_RADIUS,
-      new ReplanningConfig());
+    // public static final HolonomicPathFollowerConfig AUTO_CONFIG = new HolonomicPathFollowerConfig(
+    //   new PIDConstants(AUTO_kP_TRANSLATION, 0.0, 0.0),
+    //   new PIDConstants(AUTO_kP_ROTATION, 0.0, 0.0),
+    //   DRIVETRAIN_MAX_SPEED, // Max module speed, in m/s
+    //   DRIVE_BASE_RADIUS,
+    //   new ReplanningConfig());
+
+    public static final double ROBOT_MASS = Units.lbsToKilograms(30);
+    public static final double ROBOT_MOI = 6.883; // estimate
+    public static final int DRIVE_CURRENT_LIMIT = 60;
+    public static final int TURN_CURRENT_LIMIT = 20;
+
+    public static final RobotConfig PATHPLANNER_CONFIG = new RobotConfig(
+      ROBOT_MASS,
+      ROBOT_MOI,
+      new ModuleConfig(
+        WHEEL_DIAMETER / 2,
+        DRIVETRAIN_MAX_SPEED,
+        1.916, // vex grip v2 cof
+        DCMotor.getKrakenX60(1).withReduction(DRIVE_MOTOR_GEAR_RATIO),
+        DRIVE_CURRENT_LIMIT,
+        1),
+      MODULE_TRANSLATIONS);
 
     public static final double AUTO_DRIVE_MAX_SPEED = DRIVETRAIN_MAX_SPEED / 1.5;
     public static final double AUTO_DRIVE_MAX_ANGULAR_SPEED = DRIVETRAIN_MAX_ANGULAR_SPEED / 2.0;

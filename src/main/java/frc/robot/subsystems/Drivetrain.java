@@ -8,6 +8,8 @@ import java.text.DecimalFormat;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -101,12 +103,15 @@ public class Drivetrain extends SubsystemBase {
       getModulePositions(),
       new Pose2d());
 
-    AutoBuilder.configureHolonomic(
+    AutoBuilder.configure(
       this::getPose,
       this::resetPose,
       this::getRobotRelativeSpeeds,
       this::driveRobotRelative,
-      SwerveConstants.AUTO_CONFIG,
+      new PPHolonomicDriveController(
+        new PIDConstants(5.0, 0.0, 0.0),
+        new PIDConstants(5.0, 0.0, 0.0)),
+      SwerveConstants.PATHPLANNER_CONFIG,
       () -> isRedAlliance(),
       this);
   }
@@ -116,7 +121,7 @@ public class Drivetrain extends SubsystemBase {
     poseEstimator.update(getHeadingRotation2d(), getModulePositions());
 
     SmartDashboard.putNumber("Robot Angle", getHeading());
-    SmartDashboard.putString("Angular Speed", new DecimalFormat("#.00").format((-gyro.getRate() / 180)) + "pi rad/s");
+    SmartDashboard.putString("Angular Speed", new DecimalFormat("#.00").format((-gyro.getAngularVelocityZWorld().getValueAsDouble() / 180)) + "pi rad/s");
   }
 
   public void swerveDrive(double frontSpeed, double sideSpeed, double turnSpeed, 
@@ -192,7 +197,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public double getHeading(){
-    return Math.IEEEremainder(-gyro.getAngle(), 360); //clamp heading between -180 and 180
+    return Math.IEEEremainder(-gyro.getYaw().getValueAsDouble(), 360); //clamp heading between -180 and 180
   }
 
   public Rotation2d getHeadingRotation2d(){

@@ -5,9 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,15 +13,12 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.drivers.PearadoxSparkMax;
+import frc.lib.drivers.PearadoxTalonFX;
 import frc.robot.Constants.SwerveConstants;
 
 public class SwerveModule extends SubsystemBase {
-  private PearadoxSparkMax driveMotor;
-  private PearadoxSparkMax turnMotor;
-
-  private RelativeEncoder driveEncoder;
-  private RelativeEncoder turnEncoder;
+  private PearadoxTalonFX driveMotor;
+  private PearadoxTalonFX turnMotor;
 
   private PIDController turnPIDController;
   private CANcoder absoluteEncoder;
@@ -44,11 +39,8 @@ public class SwerveModule extends SubsystemBase {
       driveID = driveMotorId;
       absoluteEncoder = new CANcoder(absoluteEncoderId);
 
-      driveMotor = new PearadoxSparkMax(driveMotorId, MotorType.kBrushless, IdleMode.kCoast, 45, driveMotorReversed);
-      turnMotor = new PearadoxSparkMax(turnMotorId, MotorType.kBrushless, IdleMode.kCoast, 25, turnMotorReversed);
-
-      driveEncoder = driveMotor.getEncoder();
-      turnEncoder = turnMotor.getEncoder();
+      driveMotor = new PearadoxTalonFX(driveMotorId, NeutralModeValue.Coast, SwerveConstants.DRIVE_CURRENT_LIMIT, driveMotorReversed);
+      turnMotor = new PearadoxTalonFX(turnMotorId, NeutralModeValue.Coast, SwerveConstants.TURN_CURRENT_LIMIT, turnMotorReversed);
 
       turnPIDController = new PIDController(SwerveConstants.KP_TURNING, 0, 0);
       turnPIDController.enableContinuousInput(-Math.PI, Math.PI);
@@ -68,29 +60,29 @@ public class SwerveModule extends SubsystemBase {
 
   public void setBrake(boolean brake){
     if(brake){
-      driveMotor.setIdleMode(IdleMode.kBrake);
-      turnMotor.setIdleMode(IdleMode.kCoast);
+      driveMotor.setNeutralMode(NeutralModeValue.Brake);
+      turnMotor.setNeutralMode(NeutralModeValue.Coast);
     }
     else{
-      driveMotor.setIdleMode(IdleMode.kCoast);
-      turnMotor.setIdleMode(IdleMode.kCoast);
+      driveMotor.setNeutralMode(NeutralModeValue.Coast);
+      turnMotor.setNeutralMode(NeutralModeValue.Coast);
     }
   }
   
   public double getDriveMotorPosition(){
-    return driveEncoder.getPosition() * SwerveConstants.DRIVE_MOTOR_PCONVERSION;
+    return driveMotor.getPosition().getValueAsDouble() * SwerveConstants.DRIVE_MOTOR_PCONVERSION;
   }
 
   public double getDriveMotorVelocity(){
-    return driveEncoder.getVelocity() * SwerveConstants.DRIVE_MOTOR_VCONVERSION;
+    return driveMotor.getVelocity().getValueAsDouble() * SwerveConstants.DRIVE_MOTOR_VCONVERSION;
   }
 
   public double getTurnMotorPosition(){
-    return turnEncoder.getPosition() * SwerveConstants.TURN_MOTOR_PCONVERSION;
+    return turnMotor.getPosition().getValueAsDouble() * SwerveConstants.TURN_MOTOR_PCONVERSION;
   }
 
   public double getTurnMotorVelocity(){
-    return turnEncoder.getVelocity() * SwerveConstants.TURN_MOTOR_VCONVERSION;
+    return turnMotor.getVelocity().getValueAsDouble() * SwerveConstants.TURN_MOTOR_VCONVERSION;
   }
 
   public double getAbsoluteEncoderAngle(){
@@ -101,8 +93,8 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public void resetEncoders(){
-    driveEncoder.setPosition(0);
-    turnEncoder.setPosition(getAbsoluteEncoderAngle() / SwerveConstants.TURN_MOTOR_PCONVERSION);
+    driveMotor.setPosition(0);
+    turnMotor.setPosition(getAbsoluteEncoderAngle() / SwerveConstants.TURN_MOTOR_PCONVERSION);
   }
 
   public SwerveModuleState getState(){
@@ -114,12 +106,12 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public void setDesiredState(SwerveModuleState desiredState){
-    desiredState = SwerveModuleState.optimize(desiredState, getState().angle); 
+    desiredState.optimize(getState().angle);
     
     setAngle(desiredState);
     setSpeed(desiredState);
-    SmartDashboard.putString("Swerve [" + driveMotor.getDeviceId() + "] State", getState().toString());
-    SmartDashboard.putNumber("Abs Angle " + driveMotor.getDeviceId(), getAbsoluteEncoderAngle());
+    SmartDashboard.putString("Swerve [" + driveMotor.getDeviceID() + "] State", getState().toString());
+    SmartDashboard.putNumber("Abs Angle " + driveMotor.getDeviceID(), getAbsoluteEncoderAngle());
   }
 
   public void setSpeed(SwerveModuleState desiredState){
