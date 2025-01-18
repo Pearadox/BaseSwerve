@@ -6,10 +6,11 @@ package frc.robot.subsystems;
 
 import java.text.DecimalFormat;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -35,7 +36,7 @@ public class Drivetrain extends SubsystemBase {
   private SlewRateLimiter sideLimiter;
   private SlewRateLimiter turnLimiter;
 
-  private Pigeon2 gyro;
+  private AHRS gyro;
 
   private SwerveDrivePoseEstimator poseEstimator;
 
@@ -95,7 +96,7 @@ public class Drivetrain extends SubsystemBase {
     sideLimiter = new SlewRateLimiter(SwerveConstants.TELE_DRIVE_MAX_ACCELERATION);
     turnLimiter = new SlewRateLimiter(SwerveConstants.TELE_DRIVE_MAX_ANGULAR_ACCELERATION);
 
-    gyro = new Pigeon2(SwerveConstants.PIGEON_ID);
+    gyro = new AHRS(NavXComType.kMXP_SPI);
 
     poseEstimator = new SwerveDrivePoseEstimator(
       SwerveConstants.DRIVE_KINEMATICS,
@@ -121,7 +122,7 @@ public class Drivetrain extends SubsystemBase {
     poseEstimator.update(getHeadingRotation2d(), getModulePositions());
 
     SmartDashboard.putNumber("Robot Angle", getHeading());
-    SmartDashboard.putString("Angular Speed", new DecimalFormat("#.00").format((-gyro.getAngularVelocityZWorld().getValueAsDouble() / 180)) + "pi rad/s");
+    SmartDashboard.putString("Angular Speed", new DecimalFormat("#.00").format((-gyro.getRate() / 180)) + "pi rad/s");
   }
 
   public void swerveDrive(double frontSpeed, double sideSpeed, double turnSpeed, 
@@ -189,15 +190,15 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void zeroHeading(){
-    gyro.setYaw(0);
+    gyro.setAngleAdjustment(0.0);
   }
 
   public void setHeading(double heading){
-    gyro.setYaw(heading);
+    gyro.setAngleAdjustment(heading);
   }
 
   public double getHeading(){
-    return Math.IEEEremainder(-gyro.getYaw().getValueAsDouble(), 360); //clamp heading between -180 and 180
+    return Math.IEEEremainder(-gyro.getYaw(), 360); //clamp heading between -180 and 180
   }
 
   public Rotation2d getHeadingRotation2d(){

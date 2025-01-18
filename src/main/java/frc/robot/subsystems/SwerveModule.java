@@ -6,6 +6,9 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,12 +16,15 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.drivers.PearadoxSparkMax;
 import frc.lib.drivers.PearadoxTalonFX;
 import frc.robot.Constants.SwerveConstants;
 
 public class SwerveModule extends SubsystemBase {
   private PearadoxTalonFX driveMotor;
-  private PearadoxTalonFX turnMotor;
+  private PearadoxSparkMax turnMotor;
+
+  private RelativeEncoder turnEncoder;
 
   private PIDController turnPIDController;
   private CANcoder absoluteEncoder;
@@ -40,7 +46,7 @@ public class SwerveModule extends SubsystemBase {
       absoluteEncoder = new CANcoder(absoluteEncoderId);
 
       driveMotor = new PearadoxTalonFX(driveMotorId, NeutralModeValue.Coast, SwerveConstants.DRIVE_CURRENT_LIMIT, driveMotorReversed);
-      turnMotor = new PearadoxTalonFX(turnMotorId, NeutralModeValue.Coast, SwerveConstants.TURN_CURRENT_LIMIT, turnMotorReversed);
+      turnMotor = new PearadoxSparkMax(turnMotorId, MotorType.kBrushless, IdleMode.kCoast, 25, turnMotorReversed);
 
       turnPIDController = new PIDController(SwerveConstants.KP_TURNING, 0, 0);
       turnPIDController.enableContinuousInput(-Math.PI, Math.PI);
@@ -61,11 +67,11 @@ public class SwerveModule extends SubsystemBase {
   public void setBrake(boolean brake){
     if(brake){
       driveMotor.setNeutralMode(NeutralModeValue.Brake);
-      turnMotor.setNeutralMode(NeutralModeValue.Coast);
+      turnMotor.setIdleMode(IdleMode.kCoast);
     }
     else{
       driveMotor.setNeutralMode(NeutralModeValue.Coast);
-      turnMotor.setNeutralMode(NeutralModeValue.Coast);
+      turnMotor.setIdleMode(IdleMode.kCoast);
     }
   }
   
@@ -78,11 +84,11 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public double getTurnMotorPosition(){
-    return turnMotor.getPosition().getValueAsDouble() * SwerveConstants.TURN_MOTOR_PCONVERSION;
+    return turnEncoder.getPosition() * SwerveConstants.TURN_MOTOR_PCONVERSION;
   }
 
   public double getTurnMotorVelocity(){
-    return turnMotor.getVelocity().getValueAsDouble() * SwerveConstants.TURN_MOTOR_VCONVERSION;
+    return turnEncoder.getVelocity() * SwerveConstants.TURN_MOTOR_VCONVERSION;
   }
 
   public double getAbsoluteEncoderAngle(){
@@ -94,7 +100,7 @@ public class SwerveModule extends SubsystemBase {
 
   public void resetEncoders(){
     driveMotor.setPosition(0);
-    turnMotor.setPosition(getAbsoluteEncoderAngle() / SwerveConstants.TURN_MOTOR_PCONVERSION);
+    turnEncoder.setPosition(getAbsoluteEncoderAngle() / SwerveConstants.TURN_MOTOR_PCONVERSION);
   }
 
   public SwerveModuleState getState(){
